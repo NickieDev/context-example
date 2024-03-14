@@ -1,15 +1,29 @@
 'use client'
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { InputField } from "./InputField"
 import { Item } from "./Item"
 import { useUser } from "@/hooks/useUser"
 import { Button } from "./Button"
+import axios from "axios"
+import { User } from "@/types/user"
+import { baseURL } from "@/libs/baseURL"
 
 export const ContentArea = () => {
    const { nameField, setNameField, emailField, setEmailField, } = useUser()
+   const [userList, setUserList] = useState<User[]>([])
 
    const [toEdit, setToEdit] = useState(false)
+
+   const getUserList = async() => {
+      await baseURL.get('/')
+         .then(res => console.log(res))
+         .then(res => setUserList(res.data.result))
+   }
+
+   useEffect(() => {
+      getUserList()
+   }, [userList])
 
    return(
       <div className="flex items-center flex-col border border-red-600 w-full">
@@ -31,9 +45,11 @@ export const ContentArea = () => {
          </div>
 
          <div className="mt-10">
-            <Item />
-            <Item />
-            <Item />
+            { userList.length === 0 && <p className="text-base text-gray-400">Ainda não possui nenhum usuário cadasrado</p> }
+
+            { userList.length >= 1 &&
+               <Item />
+            }
          </div>
    
       </div>
