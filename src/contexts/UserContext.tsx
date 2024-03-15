@@ -17,7 +17,7 @@ let defaultValue: UserContextType = {
    nameField: '',
    setNameField: () => { },
    emailField: '',
-   setEmailField: () => { }
+   setEmailField: () => { },
 }
 
 // Criação do Context

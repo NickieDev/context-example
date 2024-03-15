@@ -8,22 +8,38 @@ import { Button } from "./Button"
 import axios from "axios"
 import { User } from "@/types/user"
 import { baseURL } from "@/libs/baseURL"
+import { serviceAPI } from "@/service/service"
+import { useUserList } from "@/hooks/useUserList"
+import { UserListProvider } from "@/contexts/UserListContext"
+import { UserProvider } from "@/contexts/UserContext"
+
 
 export const ContentArea = () => {
    const { nameField, setNameField, emailField, setEmailField, } = useUser()
-   const [userList, setUserList] = useState<User[]>([])
+   // const [nameField, setNameField] = useState('')
+   // const [emailField, setEmailField] = useState('')
+   const { userList, setUserList } = useUserList()
 
-   const [toEdit, setToEdit] = useState(false)
-
-   const getUserList = async() => {
-      await baseURL.get('/')
-         .then(res => console.log(res))
-         .then(res => setUserList(res.data.result))
+   const getUsers = async() => {
+      try {
+         let users = await serviceAPI.getUserList()
+         // console.log(users)
+         setUserList(users)
+         
+      } catch(e) {
+         console.log(e)
+      }
    }
 
    useEffect(() => {
-      getUserList()
+      getUsers()
+   }, [])
+
+   useEffect(() => {
+      console.log(userList)
    }, [userList])
+
+   const [toEdit, setToEdit] = useState(false)
 
    return(
       <div className="flex items-center flex-col border border-red-600 w-full">
@@ -45,14 +61,23 @@ export const ContentArea = () => {
          </div>
 
          <div className="mt-10">
-            { userList.length === 0 && <p className="text-base text-gray-400">Ainda não possui nenhum usuário cadasrado</p> }
+            { userList.length === 0 && <p className="text-base text-gray-400">Ainda não possui nenhum usuário cadastrado</p> }
 
-            { userList.length >= 1 &&
-               <Item />
-            }
+            { userList.map((item, index) => (
+               <Item 
+                  id={ item.id } 
+                  name={ item.name } 
+                  email={ item.email } 
+                  key={ item.id } /> 
+            ))}
+
+            <ul>
+               { userList.map((item, index) => (
+                  <li key={ index }>{ item.name }</li>
+               )) }
+            </ul>
          </div>
    
       </div>
-
    )
 }

@@ -1,6 +1,7 @@
 'use client'
 
-import { ChangeEvent, Dispatch, SetStateAction } from "react"
+import { useUser } from "@/hooks/useUser"
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react"
 
 type Props = {
    valueField: string
@@ -9,6 +10,8 @@ type Props = {
 }
 
 export const InputField = ({ valueField, onChangeField, placeholder }: Props) => {
+   const { value, setValue } = useUser()
+   
    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
       onChangeField(event.target.value)
 
@@ -16,12 +19,14 @@ export const InputField = ({ valueField, onChangeField, placeholder }: Props) =>
    }
 
    return(
-      <input 
-         type="text" 
-         className="rounded p-2 sm:w-full"
-         placeholder={ placeholder }
-         value={ valueField }
-         onChange={ handleChange }
-      />
+      <div>
+         <input 
+            type="text" 
+            className="rounded p-2 sm:w-full"
+            placeholder={ placeholder }
+            value={ valueField }
+            onChange={ handleChange }
+         />
+      </div>
    )
 }

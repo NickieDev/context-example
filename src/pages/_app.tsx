@@ -1,12 +1,15 @@
-import { UserProvider } from '@/context/UserContext'
+import { UserProvider } from '@/contexts/UserContext'
+import { UserListProvider } from '@/contexts/UserListContext'
 import type { AppProps } from 'next/app'
 
 
 export default function MyApp({ Component, pageProps }: AppProps) {
 
    return (
-      <UserProvider>
-         <Component {...pageProps} />
-      </UserProvider>
+      <UserListProvider>
+         <UserProvider>
+            <Component {...pageProps} />
+         </UserProvider>
+      </UserListProvider>
    )
 }
