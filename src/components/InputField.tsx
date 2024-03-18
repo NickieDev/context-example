@@ -10,12 +10,11 @@ type Props = {
 }
 
 export const InputField = ({ valueField, onChangeField, placeholder }: Props) => {
-   const { value, setValue } = useUser()
    
    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
       onChangeField(event.target.value)
 
-      console.log(event.target.value)
+      // console.log(event.target.value)
    }
 
    return(

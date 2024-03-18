@@ -1,35 +1,54 @@
 'use client'
 
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useContext, useState } from "react"
 import { Button } from "./Button"
 import { useUser } from "@/hooks/useUser"
 import { User } from "@/types/user"
 import { serviceAPI } from "@/service/service"
+import { useUserList } from "@/hooks/useUserList"
+import { useToEdit } from "@/hooks/useToEdit"
+import { ToEditContext } from "@/contexts/ToEditContext"
 
-export const Item = ({ id, name, email }: User) => {
-   const [toEdit, setToEdit] = useState(false)
+export const Item = ({ id, userName, userEmail }: User) => {
 
    const { nameField, setNameField, emailField, setEmailField, } = useUser()
 
-   const handleUpdate = (id: number, nameField: string, emailField: string) => {
-      serviceAPI.updateUser(id, nameField, emailField)
+   const { userList, setUserList } = useUserList()
+
+   const { setId, toEdit, setToEdit } = useToEdit()
+
+   const handleUpdate = async (id: number, nameField: string, emailField: string) => {
+      let findUser = userList.find(user => user.id === id)
+
+      setToEdit(true)
+
+      // alert(toEdit)
+      
+      // console.log(findUser)
+      
+      if(findUser) {
+         setNameField(findUser.userName)
+         setEmailField(findUser.userEmail)
+         setId(findUser.id)
+      }
    }
 
    const handleDelete = (id: number) => {
       serviceAPI.deleteUser(id)
-      // userList.filter(user => user.id !== id)
+
+      setUserList(userList.filter(user => user.id !== id))
    }
 
    return(
-      <div className="flex items-center justify-center bober border-b-2">
+      <div className="flex items-center justify-center borber border-b-2">
 
-         <div className="flex justify-center items-center text-red-400">
+         <div className="flex justify-center items-center text-gray-400">
             <p className="w-[200px] p-4">
-               { name } - Name
+               { userName }
             </p>
 
             <p className="w-[350px] p-4">
-               { email } - Email
+               { userEmail }
             </p>
          </div>
 
@@ -47,3 +66,7 @@ export const Item = ({ id, name, email }: User) => {
       </div>
    )
 }
+
+/*
+   iron maiden, metallica, nirvana, sex pixtol, dead keneddy, ratos de porao, offspring
+*/
